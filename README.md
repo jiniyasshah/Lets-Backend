@@ -2,6 +2,6 @@
 
 Learning Industry Level Backend
 
-- [Youtube](https://youtu.be/7fjOw8ApZ1I)
 - [Github](https://github.com/jiniyasshah)
 - [Facebook](https://www.facebook.com/sanket.shah.ts/)
+- [LinkedIn](https://www.linkedin.com/in/jiniyas-shah-20267225b/)
