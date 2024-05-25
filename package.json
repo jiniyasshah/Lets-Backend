@@ -1,0 +1,22 @@
+{
+  "name": "lets-backend",
+  "version": "1.0.0",
+  "description": "My Backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "author": "Jiniyas Shah",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
