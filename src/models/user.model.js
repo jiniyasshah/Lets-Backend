@@ -7,7 +7,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      lowecase: true,
+      lowercase: true,
       trim: true,
       index: true,
     },
@@ -24,7 +24,7 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
-    avatar: {
+    avatarImage: {
       type: String, //Stores the URL of the Image
       required: true,
     },
@@ -43,7 +43,7 @@ const userSchema = new Schema(
     },
 
     refreshToken: {
-      required: true,
+      type: String,
     },
   },
   {
@@ -60,7 +60,7 @@ userSchema.pre("save", async function (next) {
 
   //Slightly more efficient because it avoids the extra conditional check
   if (!this.isModified("password")) return next();
-  this.password = bycrypt.hash(this.password, 10);
+  this.password = await bycrypt.hash(this.password, 10);
   next();
 });
 
