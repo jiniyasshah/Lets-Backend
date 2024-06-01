@@ -205,4 +205,72 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    throw new ApiError(404, "All fields are required !!");
+  }
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(
+      401,
+      "New Password and Confirm Password must be same !!"
+    );
+  }
+  if (oldPassword == newPassword) {
+    throw new ApiError(
+      401,
+      "New Password must be different from old password !!"
+    );
+  }
+  const userData = await User.findById(req.user?._id);
+  const isPasswordValid = await userData.isPasswordCorrect(oldPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid user credentials !!");
+  }
+  userData.password = newPassword;
+  await userData.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Successfully changed the password !!"));
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Succesfully fetched user data !!"));
+});
+
+const updateAccount = asyncHandler(async (req, res) => {
+  const { email, fullName } = req.body;
+
+  if (!email && !fullName) {
+    throw new ApiError(400, "At least one of the fields is required!!");
+  }
+  //Initialize the updateFields object with empty strings is not an optimal approach because it would still include the fields in the update
+  const updateFields = {};
+  if (email) updateFields.email = email;
+  if (fullName) updateFields.fullName = fullName;
+
+  const userData = await User.findByIdAndUpdate(
+    req.user?._id,
+    { $set: updateFields },
+    { new: true } // Returns the updated document
+  ).select("-password");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, userData, "Account details updated successfully")
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccount,
+};
